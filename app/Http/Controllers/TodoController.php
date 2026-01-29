@@ -9,7 +9,7 @@ class TodoController extends Controller
 {
     function index()
     {
-        $todos = Todo::orderBy("id")->paginate(10);
+        $todos = Todo::all();
         return view('home' ,compact('todos'));
     }
 

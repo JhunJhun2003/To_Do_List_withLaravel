@@ -18,10 +18,11 @@
                     @else
                         Pending
                     @endif
+
+                    <button>edit</button>
                 </li>
             @endforeach
         </ul>
-        {{ $todos->links() }}
     </div>
     @yield('addtask')
 </body>
