@@ -3,7 +3,7 @@
 <div> 
 
     <div class="container mt-5">
-    <h1>Edit Task</h1>
+    <h1 class="text-center">Edit Task</h1>
     <a href="{{ route('home') }}" class="btn btn-secondary mb-3">Back to Task List</a>
 
     <form method="POST" action="{{ route('updatedtask', $todo->id) }}">
