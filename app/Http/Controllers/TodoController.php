@@ -43,4 +43,12 @@ class TodoController extends Controller
 
         return redirect()->route('home');
     }
+
+    public function deletetask($id)
+    {
+        $todo = Todo::find($id);
+        $todo->delete();
+
+        return redirect()->route('home');
+    }
 }

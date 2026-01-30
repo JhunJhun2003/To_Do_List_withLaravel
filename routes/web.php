@@ -13,4 +13,6 @@ Route::get('/edit/{id}', [TodoController::class,'edittask'])->name('edittask');
 
 Route::put('/updatedtask/{id}', [TodoController::class,'updatedtask'])->name('updatedtask');
 
+Route::get('/deletetask/{id}', [TodoController::class,'deletetask'])->name('deletetask');
+
 Route::get('/taskdetail', [TodoController::class, 'taskdetail'])->name('taskdetail');
