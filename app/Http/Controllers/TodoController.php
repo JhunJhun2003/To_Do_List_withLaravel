@@ -9,7 +9,7 @@ class TodoController extends Controller
 {
     public function index()
     {
-        $todos = Todo::all();
+        $todos = Todo::simplePaginate(5);
 
         return view('home', compact('todos'));
     }
