@@ -19,11 +19,12 @@
                         Pending
                     @endif
 
-                    <button>edit</button>
+                    <button><a href="{{ route('edittask', $todo->id) }}">Edit</a></button>
                 </li>
             @endforeach
         </ul>
     </div>
     @yield('addtask')
+    @yield('edittask')
 </body>
 </html>

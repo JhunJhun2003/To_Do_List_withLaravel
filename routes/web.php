@@ -9,4 +9,8 @@ Route::get('/addtask', [TodoController::class, 'addtask'])->name('addtask');
 
 Route::post('/storetask', [TodoController::class, 'storetask'])->name('storetask');
 
+Route::get('/edit/{id}', [TodoController::class,'edittask'])->name('edittask');
+
+Route::put('/updatedtask/{id}', [TodoController::class,'updatedtask'])->name('updatedtask');
+
 Route::get('/taskdetail', [TodoController::class, 'taskdetail'])->name('taskdetail');

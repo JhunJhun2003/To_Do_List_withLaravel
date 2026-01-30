@@ -2,27 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Todo;
+use Illuminate\Http\Request;
 
 class TodoController extends Controller
 {
-    function index()
+    public function index()
     {
         $todos = Todo::all();
-        return view('home' ,compact('todos'));
+
+        return view('home', compact('todos'));
     }
 
-    function addtask()
+    public function addtask()
     {
         return view('component.addtask');
     }
 
-    function storetask(Request $request)
+    public function storetask(Request $request)
     {
         $todo = new Todo;
         $todo->title = $request->title;
         $todo->save();
+
+        return redirect()->route('home');
+    }
+
+    public function edittask(Request $request, $id)
+    {
+        $todo = Todo::find($id);
+        return view('component.edittask', compact('todo'));
+    }
+
+    public function updatedtask(Request $request, $id)
+    {
+        $todo = Todo::find($id);
+        $todo->title = $request->title;
+        $todo->done = $request->done ?? 0;
+        $todo->save();
+
         return redirect()->route('home');
     }
 }
