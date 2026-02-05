@@ -18,3 +18,6 @@ Route::get('/deletetask/{id}', [TodoController::class,'deletetask'])->name('dele
 Route::get('/taskdetail', [TodoController::class, 'taskdetail'])->name('taskdetail');
 
 Route::patch('/todos/{todo}/toggle', [TodoController::class, 'toggle'])->name('toggle');
+
+Route::any('/searchtitle', [TodoController::class, 'searchtitle'])->name('searchtitle');
+

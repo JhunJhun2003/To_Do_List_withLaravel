@@ -72,4 +72,12 @@ class TodoController extends Controller
         $todo->save();
         return response()->json(['success' => true, 'done' => $todo->done]);
     }
+
+    public function searchtitle(Request $request)
+    {
+        $search = $request->input('search');
+        $todos = Todo::where('title', 'like', '%' . $search . '%')->simplePaginate(5);
+
+        return view('home', compact('todos'));
+    }
 }
