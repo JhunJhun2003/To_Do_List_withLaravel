@@ -21,3 +21,6 @@ Route::patch('/todos/{todo}/toggle', [TodoController::class, 'toggle'])->name('t
 
 Route::any('/searchtitle', [TodoController::class, 'searchtitle'])->name('searchtitle');
 
+Route::get('/complete', [TodoController::class, 'complete'])->name('complete');
+
+Route::get('/pending', [TodoController::class, 'pending'])->name('pending');

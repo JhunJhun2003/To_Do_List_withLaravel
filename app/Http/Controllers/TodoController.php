@@ -80,4 +80,18 @@ class TodoController extends Controller
 
         return view('home', compact('todos'));
     }
+
+    public function complete()
+    {
+        $todos = Todo::where('done', true)->simplePaginate(5);
+
+        return view('home', compact('todos'));
+    }
+
+    public function pending()
+    {
+        $todos = Todo::where('done', false)->simplePaginate(5);
+
+        return view('home', compact('todos'));
+    }
 }

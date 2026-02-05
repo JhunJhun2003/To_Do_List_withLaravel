@@ -13,13 +13,19 @@
     <div class="container mt-4">
         <h1 class="text-center">To Do Lists</h1>
 
-        <a href="{{ route('addtask') }}" class="btn btn-primary mb-3">Add Task</a>
+
         <form id="searchForm" action="{{ route('searchtitle') }}" method="POST">
             <div class="form-group">
                 @csrf
                 <input type="search" name="search" placeholder="What are you searching for...">
                 <button type="submit" class="submit">Search</button>
             </div><br>
+            <div class="text-center">
+                <a href="{{ route('home') }}" class="btn btn-primary mb-3">Home</a>
+                <a href="{{ route('addtask') }}" class="btn btn-primary mb-3">Add Task</a>
+                <a href="{{ route('complete') }}" class="btn btn-primary mb-3">Completed Tasks</a>
+                <a href="{{ route('pending') }}" class="btn btn-primary mb-3 ">Pending Tasks</a>
+            </div>
             <table class="table table-bordered table-striped">
                 <thead class="table-dark">
                     <tr>
