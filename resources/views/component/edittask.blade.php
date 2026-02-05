@@ -15,10 +15,10 @@
             <input type="text" id="title" name="title" class="form-control" value="{{ $todo->title }}" required>
         </div>
 
-        <div class="form-check mb-3">
+        {{-- <div class="form-check mb-3">
             <input type="checkbox" id="done" name="done" class="form-check-input" value="1" {{ $todo->done ? 'checked' : '' }}>
             <label for="done" class="form-check-label">Done</label>
-        </div>
+        </div> --}}
 
         <button type="submit" class="btn btn-primary">Update Task</button>
     </form>

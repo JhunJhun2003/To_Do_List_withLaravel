@@ -28,12 +28,15 @@ class TodoController extends Controller
         return redirect()->route('home');
     }
 
+    // to go edit page
     public function edittask(Request $request, $id)
     {
         $todo = Todo::find($id);
+
         return view('component.edittask', compact('todo'));
     }
 
+    // to update task
     public function updatedtask(Request $request, $id)
     {
         $todo = Todo::find($id);
@@ -50,5 +53,23 @@ class TodoController extends Controller
         $todo->delete();
 
         return redirect()->route('home');
+    }
+
+    // public function toggle(Todo $todo)
+    // {
+    //     $todo->done = !$todo->done;
+    //     $todo->save();
+
+    //     return redirect()->route('home');
+    // }
+    public function toggle(Todo $todo)
+    {
+        // If it was 1 (true), it becomes 0 (false) and vice-versa
+        $todo->update([
+            'done' => ! $todo->done,
+        ]);
+
+        $todo->save();
+        return response()->json(['success' => true, 'done' => $todo->done]);
     }
 }

@@ -16,3 +16,5 @@ Route::put('/updatedtask/{id}', [TodoController::class,'updatedtask'])->name('up
 Route::get('/deletetask/{id}', [TodoController::class,'deletetask'])->name('deletetask');
 
 Route::get('/taskdetail', [TodoController::class, 'taskdetail'])->name('taskdetail');
+
+Route::patch('/todos/{todo}/toggle', [TodoController::class, 'toggle'])->name('toggle');
