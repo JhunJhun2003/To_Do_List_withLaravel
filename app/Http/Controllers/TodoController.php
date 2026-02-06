@@ -16,7 +16,10 @@ class TodoController extends BaseController
 
     public function index()
     {
-        $todos = Todo::simplePaginate(5);
+        // $todos = Todo::simplePaginate(5);
+        $todos = Todo::where('user_id', Auth::id())
+        ->orderBy('created_at', 'desc')
+        ->paginate(5);
 
         return view('home', compact('todos'));
     }
@@ -49,7 +52,7 @@ class TodoController extends BaseController
     {
         $todo = Todo::find($id);
         $todo->title = $request->title;
-        $todo->done = $request->done ?? 0;
+        // $todo->done = $request->done ?? 0;
         $todo->save();
 
         return redirect()->route('home');

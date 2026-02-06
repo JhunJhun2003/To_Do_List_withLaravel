@@ -14,7 +14,7 @@
         <h1 class="text-center">To Do Lists</h1>
 
 
-        <form id="searchForm" action="{{ route('searchtitle') }}" method="POST">
+        {{-- <form id="searchForm" action="{{ route('searchtitle') }}" method="POST">
             <div class="form-group">
                 @csrf
                 <input type="search" class="" name="search" placeholder="What are you searching for...">
@@ -30,8 +30,62 @@
                 @csrf
                 <button type="submit" class="btn btn-primary mb-3">Logout</button>
             </form>
-            {{-- <a href="{{ route('logout') }}" class="btn btn-primary mb-3 ">Logout</a> --}}
-        </div>
+            {{-- <a href="{{ route('logout') }}" class="btn btn-primary mb-3 ">Logout</a> 
+             </div> --}}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+            <div class="container">
+
+                <a class="navbar-brand" href="{{ route('home') }}">
+                    {{ Auth::user()->name }}
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+
+                    {{-- Search --}}
+                    <form class="d-flex me-auto" method="POST" action="{{ route('searchtitle') }}">
+                        @csrf
+                        <input class="form-control me-2" type="search" name="search" placeholder="Search tasks...">
+                        <button class="btn btn-light" type="submit">Search</button>
+                    </form>
+
+                    {{-- Navigation Links --}}
+                    <ul class="navbar-nav mb-2 mb-lg-0">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('home') }}">Home</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('addtask') }}">Add Task</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('complete') }}">Completed</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('pending') }}">Pending</a>
+                        </li>
+
+                        {{-- Logout --}}
+                        <li class="nav-item">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-danger btn-sm ms-3">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
                 <tr>

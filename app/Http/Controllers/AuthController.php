@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -35,7 +35,8 @@ class AuthController extends Controller
         //     'password' => Hash::make($request->password),
         // ]);
 
-        $user->save();
+        // $user->save();
+        Auth::login($user);
 
         return redirect()->route(route: 'home')->with('success', 'Account created!');
     }
@@ -47,6 +48,23 @@ class AuthController extends Controller
     }
 
     // Handle login
+    // public function login(Request $request)
+    // {
+    //     $credentials = $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required',
+    //     ]);
+
+    //     if (Auth::attempt($credentials)) {
+    //         $request->session()->regenerate();
+
+    //         return redirect()->route('home');
+    //     }
+
+    //     return redirect()->route('login')->withErrors([
+    //         'email' => 'Invalid credentials.',
+    //     ]);
+    // }
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -54,14 +72,21 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        // Add remember me functionality
+        $remember = $request->has('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            return redirect()->route('home');
+
+            return redirect()->route('home')->with('success', 'Welcome back!');
         }
 
-        return redirect()->route('login')->withErrors([
-            'email' => 'Invalid credentials.',
-        ]);
+        // Return with error and preserve email
+        return back()
+            ->withInput($request->only('email', 'remember'))
+            ->withErrors([
+                'email' => 'Invalid email or password.',
+            ]);
     }
 
     // Logout
