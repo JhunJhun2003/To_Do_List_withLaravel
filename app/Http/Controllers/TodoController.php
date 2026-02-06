@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 
 class TodoController extends BaseController
 {
@@ -29,6 +30,7 @@ class TodoController extends BaseController
     {
         $todo = new Todo;
         $todo->title = $request->title;
+        $todo->user_id = Auth::id();
         $todo->save();
 
         return redirect()->route('home');

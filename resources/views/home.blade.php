@@ -20,30 +20,31 @@
                 <input type="search" class="" name="search" placeholder="What are you searching for...">
                 <button type="submit" class="btn btn-primary">Search</button>
             </div>
-            </form><br>
-            <div class="text-center">
-                <a href="{{ route('home') }}" class="btn btn-primary mb-3">Home</a>
-                <a href="{{ route('addtask') }}" class="btn btn-primary mb-3">Add Task</a>
-                <a href="{{ route('complete') }}" class="btn btn-primary mb-3">Completed Tasks</a>
-                <a href="{{ route('pending') }}" class="btn btn-primary mb-3 ">Pending Tasks</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-primary mb-3">Logout</button>
-                </form>
-                {{-- <a href="{{ route('logout') }}" class="btn btn-primary mb-3 ">Logout</a> --}}
-            </div>
-            <table class="table table-bordered table-striped">
-                <thead class="table-dark">
+        </form><br>
+        <div class="text-center">
+            <a href="{{ route('home') }}" class="btn btn-primary mb-3">Home</a>
+            <a href="{{ route('addtask') }}" class="btn btn-primary mb-3">Add Task</a>
+            <a href="{{ route('complete') }}" class="btn btn-primary mb-3">Completed Tasks</a>
+            <a href="{{ route('pending') }}" class="btn btn-primary mb-3 ">Pending Tasks</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-primary mb-3">Logout</button>
+            </form>
+            {{-- <a href="{{ route('logout') }}" class="btn btn-primary mb-3 ">Logout</a> --}}
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>no</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($todos as $todo)
                     <tr>
-                        <th>no</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($todos as $todo)
-                        <tr>
+                        @if ($todo->user_id == Auth::id())
                             <td>{{ ($todos->currentPage() - 1) * $todos->perPage() + $loop->iteration }}</td>
                             <td>{{ $todo->title }}</td>
                             <td>
@@ -61,18 +62,21 @@
                                     </label>
                                 </div>
                             </td>
+
+
                             <td>
                                 <a href="{{ route('edittask', $todo->id) }}" class="btn btn-sm btn-warning">Edit</a>
                                 <a href="{{ route('deletetask', $todo->id) }}" class="btn btn-sm btn-danger">Delete</a>
                             </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                        @endif
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
 
-            <div class="d-flex justify-content-center mt-3">
-                {{ $todos->links() }}
-            </div>
+        <div class="d-flex justify-content-center mt-3">
+            {{ $todos->links() }}
+        </div>
     </div>
 
 
