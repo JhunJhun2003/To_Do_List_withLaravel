@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\TodoController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [TodoController::class, 'index'])->name('home');
@@ -24,3 +25,14 @@ Route::any('/searchtitle', [TodoController::class, 'searchtitle'])->name('search
 Route::get('/complete', [TodoController::class, 'complete'])->name('complete');
 
 Route::get('/pending', [TodoController::class, 'pending'])->name('pending');
+
+// Register
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+
+// Login
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

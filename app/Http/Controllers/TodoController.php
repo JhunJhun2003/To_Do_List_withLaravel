@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
 
-class TodoController extends Controller
+class TodoController extends BaseController
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $todos = Todo::simplePaginate(5);
@@ -70,13 +76,14 @@ class TodoController extends Controller
         ]);
 
         $todo->save();
+
         return response()->json(['success' => true, 'done' => $todo->done]);
     }
 
     public function searchtitle(Request $request)
     {
         $search = $request->input('search');
-        $todos = Todo::where('title', 'like', '%' . $search . '%')->simplePaginate(5);
+        $todos = Todo::where('title', 'like', '%'.$search.'%')->simplePaginate(5);
 
         return view('home', compact('todos'));
     }
