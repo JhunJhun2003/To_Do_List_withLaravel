@@ -1,6 +1,6 @@
 <h2>Login</h2>
 
-<form method="POST" action="/login">
+<form method="POST" action="{{ route('loginpost') }}">
     @csrf
 
     <input type="email" name="email" placeholder="Email"><br><br>

@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [TodoController::class, 'index'])->name('home');
 
+
+
 Route::get('/addtask', [TodoController::class, 'addtask'])->name('addtask');
 
 Route::post('/storetask', [TodoController::class, 'storetask'])->name('storetask');
@@ -28,11 +30,11 @@ Route::get('/pending', [TodoController::class, 'pending'])->name('pending');
 
 // Register
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register'])->name('registerpost');
 
 // Login
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('loginpost');
 
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

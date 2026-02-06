@@ -1,6 +1,6 @@
 <h2>Register</h2>
 
-<form method="POST" action="/register">
+<form method="POST" action="{{ route('registerpost') }}">
     @csrf
 
     <input type="text" name="name" placeholder="Name"><br><br>

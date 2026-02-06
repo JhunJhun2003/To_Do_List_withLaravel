@@ -12,7 +12,7 @@ class AuthController extends Controller
     // Show register form
     public function showRegister()
     {
-        return view('auth.register');
+        return view('register');
     }
 
     // Handle register
@@ -24,19 +24,26 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed',
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
+        // User::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]);
 
-        return redirect('/login')->with('success', 'Account created!');
+        $user->save();
+
+        return redirect()->route(route: 'home')->with('success', 'Account created!');
     }
 
     // Show login form
     public function showLogin()
     {
-        return view('auth.login');
+        return view('login');
     }
 
     // Handle login
@@ -49,21 +56,32 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect('/todos');
+            return redirect()->route('home');
         }
 
-        return back()->withErrors([
+        return redirect()->route('login')->withErrors([
             'email' => 'Invalid credentials.',
         ]);
     }
 
     // Logout
+    // public function logout(Request $request)
+    // {
+    //     Auth::logout();
+    //     $request->session()->invalidate();
+    //     $request->session()->regenerateToken();
+
+    //     return redirect()->route('login');
+    // }
+
     public function logout(Request $request)
     {
         Auth::logout();
+
+        // Invalidate the session and regenerate the CSRF token
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }
