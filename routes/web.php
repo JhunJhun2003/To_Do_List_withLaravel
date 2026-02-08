@@ -3,6 +3,7 @@
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
 Route::get('/', [TodoController::class, 'index'])->name('home');
 
@@ -41,6 +42,20 @@ Route::get('/passwordrequest', [AuthController::class, 'showPasswordRequest'])->
 Route::post('/passwordrequest', [AuthController::class, 'sendPasswordResetLink'])->name('passwordrequestpost');
 Route::get('/passwordreset/{token}', [AuthController::class, 'showPasswordReset'])->name('passwordreset');
 Route::post('/passwordreset', [AuthController::class, 'resetPassword'])->name('passwordresetpost');
+
+
+Route::get('/test-email', function() {
+    try {
+        Mail::raw('Test email content', function($message) {
+            $message->to('test@example.com')
+                    ->subject('Test Email')
+                    ->from('noreply@noretodolist.asia', 'Test App');
+        });
+        return 'Email sent successfully! Check Mailpit at http://localhost:8025';
+    } catch (\Exception $e) {
+        return 'Email failed: ' . $e->getMessage();
+    }
+});
 
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

@@ -6,6 +6,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -109,34 +113,87 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
-// Show password reset request form
-    public function showPasswordRequest(){
+
+    // Show password reset request form
+    public function showPasswordRequest()
+    {
         return view('passwordrequest');
     }
 
-    //edit profile section
+    //  public function sendPasswordResetLink(Request $request){
+    //         $request->validate([
+    //             'email' => 'required|email|exists:users,email',
+    //         ]);
+
+    //         // Here you would typically send the password reset email
+    //         // For simplicity, we'll just pretend we sent it and redirect back
+    //         return back()->with('success', 'Password reset link sent to your email!');
+    //     }
+    public function sendPasswordResetLink(Request $request)
+    {
+        $request->validate([
+        'email' => 'required|email|exists:users,email',
+    ]);
+
+    try {
+        // Generate token
+        $token = Str::random(64);
+        
+        // Store in database
+        DB::table('password_resets')->updateOrInsert(
+            ['email' => $request->email],
+            [
+                'token' => Hash::make($token),
+                'created_at' => now()
+            ]
+        );
+
+        // Create reset URL
+        $resetUrl = route('password.reset', ['token' => $token, 'email' => $request->email]);
+        
+        // Send raw HTML email
+        Mail::html("
+            <h3>Password Reset Request</h3>
+            <p>Click the link below to reset your password:</p>
+            <a href='$resetUrl'>$resetUrl</a>
+            <p>This link expires in 60 minutes.</p>
+            <p>If you didn't request this, please ignore this email.</p>
+        ", function ($message) use ($request) {
+            $message->to($request->email)
+                    ->subject('Reset Your Password - ' . config('app.name'));
+        });
+
+        return back()->with('success', 'Password reset link sent! Check your email.');
+
+    } catch (\Exception $e) {
+        return back()->withErrors(['email' => 'Failed to send email: ' . $e->getMessage()]);
+    }
+    }
+
+    // edit profile section
     public function showEditProfile($id)
     {
         $user = User::findOrFail($id);
+
         return view('component.editprofile', compact('user'));
     }
 
     public function updatedprofile(Request $request, $id)
     {
-        
+
         $user = User::findOrFail($id);
         // dd($user->name);
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id
+            'email' => 'required|email|unique:users,email,'.$user->id,
         ]);
-// dd($user->name);
+        // dd($user->name);
         $user->name = $request->name;
         $user->email = $request->email;
         // if ($request->filled('password')) {
         //     $user->password = Hash::make($request->password);
         // }
-        
+
         $user->save();
 
         return redirect()->route('home')->with('success', 'Profile updated!');
