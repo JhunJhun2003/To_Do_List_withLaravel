@@ -1,23 +1,20 @@
 <?php
 
-use App\Http\Controllers\TodoController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TodoController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Mail;
 
 Route::get('/', [TodoController::class, 'index'])->name('home');
-
-
 
 Route::get('/addtask', [TodoController::class, 'addtask'])->name('addtask');
 
 Route::post('/storetask', [TodoController::class, 'storetask'])->name('storetask');
 
-Route::get('/edit/{id}', [TodoController::class,'edittask'])->name('edittask');
+Route::get('/edit/{id}', [TodoController::class, 'edittask'])->name('edittask');
 
-Route::put('/updatedtask/{id}', [TodoController::class,'updatedtask'])->name('updatedtask');
+Route::put('/updatedtask/{id}', [TodoController::class, 'updatedtask'])->name('updatedtask');
 
-Route::get('/deletetask/{id}', [TodoController::class,'deletetask'])->name('deletetask');
+Route::get('/deletetask/{id}', [TodoController::class, 'deletetask'])->name('deletetask');
 
 Route::get('/taskdetail', [TodoController::class, 'taskdetail'])->name('taskdetail');
 
@@ -40,27 +37,24 @@ Route::post('/login', [AuthController::class, 'login'])->name('loginpost');
 // Password reset
 Route::get('/passwordrequest', [AuthController::class, 'showPasswordRequest'])->name('passwordrequest');
 Route::post('/passwordrequest', [AuthController::class, 'sendPasswordResetLink'])->name('passwordrequestpost');
+
 Route::get('/passwordreset/{token}', [AuthController::class, 'showPasswordReset'])->name('passwordreset');
 Route::post('/passwordreset', [AuthController::class, 'resetPassword'])->name('passwordresetpost');
 
-
-Route::get('/test-email', function() {
-    try {
-        Mail::raw('Test email content', function($message) {
-            $message->to('test@example.com')
-                    ->subject('Test Email')
-                    ->from('noreply@noretodolist.asia', 'Test App');
-        });
-        return 'Email sent successfully! Check Mailpit at http://localhost:8025';
-    } catch (\Exception $e) {
-        return 'Email failed: ' . $e->getMessage();
-    }
+    // for testing real email sending with Mailpit
+  Route::get('/test-gmail', function() {
+    \Illuminate\Support\Facades\Mail::raw('Test email at ' . now(), function($message) {
+        $message->to('kokyaw3482@gmail.com')
+                ->subject('Test from Laravel')
+                ->from('todolist@gmail.com', 'Test App');
+    });
+    
+    return "Email sent (check test address).";
 });
-
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-//edit profile
+// edit profile
 Route::get('/editprofile/{id}', [AuthController::class, 'showEditProfile'])->name('showeditprofile');
 
 Route::post('/updatedprofile/{id}', [AuthController::class, 'updatedprofile'])->name('updatedprofile');
