@@ -38,3 +38,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('loginpost');
 
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+//edit profile
+Route::get('/editprofile/{id}', [AuthController::class, 'showEditProfile'])->name('showeditprofile');
+
+Route::post('/updatedprofile/{id}', [AuthController::class, 'updatedprofile'])->name('updatedprofile');

@@ -109,4 +109,33 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
+
+
+    //edit profile section
+    public function showEditProfile($id)
+    {
+        $user = User::findOrFail($id);
+        return view('component.editprofile', compact('user'));
+    }
+
+    public function updatedprofile(Request $request, $id)
+    {
+        
+        $user = User::findOrFail($id);
+        // dd($user->name);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id
+        ]);
+// dd($user->name);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        // if ($request->filled('password')) {
+        //     $user->password = Hash::make($request->password);
+        // }
+        
+        $user->save();
+
+        return redirect()->route('home')->with('success', 'Profile updated!');
+    }
 }

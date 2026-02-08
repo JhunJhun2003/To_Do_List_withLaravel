@@ -70,6 +70,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('pending') }}">Pending</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('showeditprofile' , Auth::id()) }}">Edit Profile</a>
+                        </li>
 
                         {{-- Logout --}}
                         <li class="nav-item">
@@ -85,7 +88,11 @@
                 </div>
             </div>
         </nav>
-
+        @if (session()->has('success'))
+            <div class="alert alert-success">
+                {{ session()->get('success') }}
+            </div>
+        @endif
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
                 <tr>
