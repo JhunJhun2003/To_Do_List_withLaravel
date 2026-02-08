@@ -19,7 +19,7 @@
                             <input type="hidden" name="token" value="{{ $token }}">
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" name="email" id="email" class="form-control" required>
+                                <input type="email" name="email" id="email" class="form-control" required value="{{ $email }}">
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">New Password</label>

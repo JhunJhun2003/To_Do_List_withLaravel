@@ -42,15 +42,15 @@ Route::get('/passwordreset/{token}', [AuthController::class, 'showPasswordReset'
 Route::post('/passwordreset', [AuthController::class, 'resetPassword'])->name('passwordresetpost');
 
     // for testing real email sending with Mailpit
-  Route::get('/test-gmail', function() {
-    \Illuminate\Support\Facades\Mail::raw('Test email at ' . now(), function($message) {
-        $message->to('kokyaw3482@gmail.com')
-                ->subject('Test from Laravel')
-                ->from('todolist@gmail.com', 'Test App');
-    });
+//   Route::get('/test-gmail', function() {
+//     \Illuminate\Support\Facades\Mail::raw('Test email at ' . now(), function($message) {
+//         $message->to('kokyaw3482@gmail.com')
+//                 ->subject('Test from Laravel')
+//                 ->from('todolist@gmail.com', 'Test App');
+//     });
     
-    return "Email sent (check test address).";
-});
+//     return "Email sent (check test address).";
+// });
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PasswordReset;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -120,9 +120,9 @@ class AuthController extends Controller
         return view('passwordrequest');
     }
 
-
     public function sendPasswordResetLink(Request $request)
     {
+
         $request->validate([
             'email' => 'required|email|exists:users,email',
         ]);
@@ -130,48 +130,101 @@ class AuthController extends Controller
         try {
             // 1. Generate unique token
             $token = Str::random(64);
-            
-            // 2. Store token in database
-            DB::table('password_resets')->updateOrInsert(
-                ['email' => $request->email],
-                [
-                    'token' => Hash::make($token),
-                    'created_at' => now()
-                ]
-            );
+           //to store token in database
+            PasswordReset::where('email', $request->email)->delete();
 
+            $passwordReset = new PasswordReset;
+            $passwordReset->email = $request->email;
+            $passwordReset->token = $token;
+            $passwordReset->created_at = now();
+            $passwordReset->save();
+
+            // dd($tostoretoken);
             // 3. Create reset link
-            $resetLink = url('/reset-password/' . $token . '?email=' . urlencode($request->email));
+            // $resetLink = url('/passwordreset/'.$token.'?email='.urlencode($request->email));
+            $resetLink = url('/passwordreset/'.$token);
 
             // 4. Send email with proper HTML template
             $emailData = [
                 'resetLink' => $resetLink,
                 'email' => $request->email,
                 'appName' => config('app.name', 'TodoList App'),
-                'expiryTime' => '60 minutes'
+                'expiryTime' => '60 minutes',
             ];
 
-            Mail::send('emails.password-reset', $emailData, function($message) use ($request) {
+            $mailtest = Mail::send('password-reset', $emailData, function ($message) use ($request) {
                 $message->to($request->email);
-                $message->subject('Password Reset Request - ' . config('app.name', 'TodoList'));
+                $message->subject('Password Reset Request - '.config('app.name', 'TodoList'));
                 $message->from(
                     config('mail.from.address', 'noreply@noretodolist.asia'),
                     config('mail.from.name', config('app.name'))
                 );
             });
+            // dd($mailtest);
+            // $tostoretoken->save();
 
             // 5. Return success
-            return back()->with('success', 'Password reset link has been sent to your email! Check Mailpit at http://localhost:8025');
+            return redirect()->back()->with('success', 'Password reset link has been sent to your email! Check Mail box');
 
         } catch (\Exception $e) {
             // Log error for debugging
-            Log::error('Password reset error: ' . $e->getMessage());
-            
+            Log::error('Password reset error: '.$e->getMessage());
+
             return back()->withErrors([
-                'email' => 'Failed to send reset link. Error: ' . $e->getMessage()
+                'email' => 'Failed to send reset link. Error: '.$e->getMessage(),
             ]);
         }
     }
+public function showPasswordReset($token)
+    {
+        $passwordReset = PasswordReset::where('token', $token)->first();
+
+        if (!$passwordReset) {
+            return redirect()->route('passwordrequest')->withErrors(['email' => 'Invalid or expired token.']);
+        }
+
+        return view('passwordreset', ['token' => $token, 'email' => $passwordReset->email]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $passwordReset = PasswordReset::where('token', $request->token)
+            ->where('email', $request->email)
+            ->first();
+
+        if (!$passwordReset) {
+            return redirect()->route('passwordrequest')->withErrors(['email' => 'Invalid or expired token.']);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return redirect()->route('passwordrequest')->withErrors(['email' => 'No user found with this email.']);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        // Delete the token after successful reset
+        $passwordReset->delete();
+
+        return redirect()->route('login')->with('success', 'Password has been reset! You can now log in with your new password.');
+    }
+    // public function sendPasswordResetLink(Request $request)
+    // {
+    //     $passwordReset = new PasswordReset;
+    //     $passwordReset->email = $request->email;
+    //     $passwordReset->token = Str::random(64);
+    //     $passwordReset->created_at = now();
+    //     $passwordReset->save();
+    //     return redirect()->route('login')->with('success', 'Password reset link has been sent to your email! Check Mailpit at http://localhost:8025');
+    // }
+
     // edit profile section
     public function showEditProfile($id)
     {
