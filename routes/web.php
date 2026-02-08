@@ -36,6 +36,12 @@ Route::post('/register', [AuthController::class, 'register'])->name('registerpos
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('loginpost');
 
+// Password reset
+Route::get('/passwordrequest', [AuthController::class, 'showPasswordRequest'])->name('passwordrequest');
+Route::post('/passwordrequest', [AuthController::class, 'sendPasswordResetLink'])->name('passwordrequestpost');
+Route::get('/passwordreset/{token}', [AuthController::class, 'showPasswordReset'])->name('passwordreset');
+Route::post('/passwordreset', [AuthController::class, 'resetPassword'])->name('passwordresetpost');
+
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

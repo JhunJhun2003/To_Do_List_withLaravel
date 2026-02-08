@@ -109,7 +109,10 @@ class AuthController extends Controller
 
         return redirect()->route('login');
     }
-
+// Show password reset request form
+    public function showPasswordRequest(){
+        return view('passwordrequest');
+    }
 
     //edit profile section
     public function showEditProfile($id)

@@ -92,7 +92,7 @@
                         </div>
                         @endif
 
-                        <!-- Display success message (e.g., after registration) -->
+                        <!-- Display success message -->
                         @if(session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             {{ session('success') }}
@@ -138,6 +138,11 @@
                             </div>
                         </form>
 
+                        <div>
+                            <a href="{{ route('passwordrequest') }}" class="d-block mt-3">
+                                Forgot your password?
+                            </a>
+                        </div>
                         <p class="text-center mt-3">
                             Don't have an account?
                             <a href="{{ route('register') }}">Create account</a>
