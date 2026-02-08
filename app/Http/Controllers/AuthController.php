@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Otp;
 use App\Models\PasswordReset;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -186,7 +187,7 @@ public function showPasswordReset($token)
         return view('passwordreset', ['token' => $token, 'email' => $passwordReset->email]);
     }
 
-    public function resetPassword(Request $request)
+    public function resetPassword(Request $request )
     {
         $request->validate([
             'token' => 'required',
@@ -225,6 +226,85 @@ public function showPasswordReset($token)
     //     return redirect()->route('login')->with('success', 'Password reset link has been sent to your email! Check Mailpit at http://localhost:8025');
     // }
 
+// Show login with OTP form
+public function showLoginWithOTP()
+{
+    return view('loginwithotp');
+}
+
+
+// Handle login with OTP
+public function loginWithOTP(Request $request){
+     $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+           try {
+            // 1. Generate unique token
+           $token = random_int(1000, 9999);
+           //to store token in database
+            Otp::where('email', $request->email)->delete();
+
+            $passwordReset = new Otp;
+            $passwordReset->email = $request->email;
+            $passwordReset->otp = $token;
+            $passwordReset->created_at = now();
+            $passwordReset->save();
+
+
+            // 4. Send email with proper HTML template
+            $emailData = [
+                'otp' => $token,
+                'email' => $request->email,
+                'appName' => config('app.name', 'TodoList App'),
+                'expiryTime' => '60 minutes',
+            ];
+
+            $mailtest = Mail::send('otpemail', $emailData, function ($message) use ($request) {
+                $message->to($request->email);
+                $message->subject('OTP from todolist - '.config('app.name', 'TodoList'));
+                $message->from(
+                    config('mail.from.address', 'noreply@noretodolist.asia'),
+                    config('mail.from.name', config('app.name'))
+                );
+            });
+            // 5. Return success
+            return view('getotp', ['email' => $request->email])->with('success', 'OTP has been sent to your email! Check Mail box');
+
+        } catch (\Exception $e) {
+            // Log error for debugging
+            Log::error('Password reset error: '.$e->getMessage());
+
+            return back()->withErrors([
+                'email' => 'Failed to send reset link. Error: '.$e->getMessage(),
+            ]);
+        }
+}
+// Handle OTP verification
+public function verifyOTP(Request $request){
+    //dd('start');
+
+    $request->validate([
+        'email' => 'required|email|exists:users,email',
+        'otp' => 'required|digits:4',
+    ]);
+    // dd('start');
+
+    $otpRecord = Otp::where('email', $request->email)
+                    ->where('otp', $request->otp)
+                    ->first();
+                    
+    if (!$otpRecord) {
+        return back()->withErrors(['otp' => 'Invalid OTP.']);
+    }
+    $otpRecord->otp = $request->otp;
+    $otpRecord->save();
+    // Log the user in
+    $user = User::where('email', $request->email)->first();
+    Auth::login($user);
+    // Delete the OTP record after successful login
+    $otpRecord->delete();
+    return redirect()->route('home')->with('success', 'Logged in successfully with OTP!');
+}
     // edit profile section
     public function showEditProfile($id)
     {

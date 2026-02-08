@@ -73,31 +73,31 @@
                         <h3 class="text-center mb-4">Login</h3>
 
                         <!-- Display general errors -->
-                        @if($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <ul class="mb-0">
-                                @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
                         @endif
 
                         <!-- Display login-specific error -->
-                        @if(session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            {{ session('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
+                        @if (session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ session('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
                         @endif
 
                         <!-- Display success message -->
-                        @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
                         @endif
 
                         <form method="POST" action="{{ route('loginpost') }}">
@@ -105,23 +105,25 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
-                                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                                <input type="email" name="email"
+                                    class="form-control @error('email') is-invalid @enderror"
                                     value="{{ old('email') }}" placeholder="Enter your email">
                                 @error('email')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                                <input type="password" name="password"
+                                    class="form-control @error('password') is-invalid @enderror"
                                     placeholder="Enter your password">
                                 @error('password')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
 
@@ -137,7 +139,10 @@
                                 </button>
                             </div>
                         </form>
-
+                        <p class="text-center">OR</p>
+                        <div class="d-grid">
+                            <a href="{{ route('loginwithotp') }}" class="btn btn-outline-secondary">Login with OTP</a>
+                        </div>
                         <div>
                             <a href="{{ route('passwordrequest') }}" class="d-block mt-3">
                                 Forgot your password?

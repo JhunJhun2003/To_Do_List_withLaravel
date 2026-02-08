@@ -11,14 +11,22 @@
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" id="name" name="name" class="form-control" value="{{ $user->name }}" required>
+                    <input type="text" id="name" name="name" class="form-control" value="{{ $user->name }}"
+                        required>
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" value="{{ $user->email }}" required>
+                    <input type="email" id="email" name="email" class="form-control" value="{{ $user->email }}"
+                        required>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Update Profile</button>
+             
             </form>
+               <div>
+                    <a href="{{ route('passwordrequest') }}" class="d-block mt-3">
+                        Forgot your password?
+                    </a>
+                </div>
         </div>

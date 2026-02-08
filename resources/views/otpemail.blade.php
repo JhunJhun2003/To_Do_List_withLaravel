@@ -56,32 +56,22 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>Password Reset Request</h2>
+            <h2>OTP Verification</h2>
         </div>
         
         <p>Hello,</p>
         
-        <p>You are receiving this email because we received a password reset request for your account ({{ $email }}).</p>
-        
-        <p>To reset your password, click the button below:</p>
+        <p>You are receiving this email because we received an OTP verification request for your account ({{ $email }}).</p>
         
         <div style="text-align: center;">
-            <a href="{{ $resetLink }}" class="reset-button">Reset Password</a>
+            {{-- <a class="reset-button">Verify OTP</a> --}}
+            <h1>Verify OTP</h1>
+            <h2>{{ $otp }}</h2>
         </div>
-        
-        <p>If the button doesn't work, copy and paste the following URL into your browser:</p>
-        
-        <div class="token-info">
-            {{ $resetLink }}
-        </div>
-        
-        <p>If you did not request a password reset, no further action is required. Your password will remain unchanged.</p>
-        
-        <div class="footer">
-            <p>This email was sent from {{ $appName }}.</p>
-            <p>If you have any questions, please contact our support team.</p>
-            <p>&copy; {{ date('Y') }} {{ $appName }}. All rights reserved.</p>
-        </div>
+        <footer class="footer">
+            <p>Thank you for verifying your OTP.</p>
+            <p>Regards,<br>{{ $appName }} Team</p>
+        </footer>
     </div>
 </body>
 </html>

@@ -51,6 +51,13 @@ Route::post('/passwordreset', [AuthController::class, 'resetPassword'])->name('p
     
 //     return "Email sent (check test address).";
 // });
+
+// Login with OTP
+Route::get('/loginwithotp', [AuthController::class, 'showLoginWithOTP'])->name('loginwithotp');
+Route::post('/loginwithotp', [AuthController::class,'loginWithOTP'])->name('loginwithotppost');
+Route::post('/verifyotp', [AuthController::class,'verifyOTP'])->name('verifyotppost');
+
+
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
